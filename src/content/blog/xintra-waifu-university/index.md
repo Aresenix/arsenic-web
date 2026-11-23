@@ -585,7 +585,7 @@ March 7, 2024 - Ransomware
 
 ## References
 
-### Microsoft / Official Documentation
+Microsoft / Official Documentation
 
 - ["Entra ID Sign-in Error Codes Reference."](https://learn.microsoft.com/en-us/entra/identity-platform/reference-error-codes). Microsoft Learn.
 - [“User is trying to login to Azure using MFA but the code they enter from authenticator is wrong.”](https://learn.microsoft.com/en-us/answers/questions/5630525/user-is-trying-to-login-to-azure-using-mfa-but-the). Microsoft Learn.
@@ -598,20 +598,20 @@ March 7, 2024 - Ransomware
 - ["SharpHound.AM Threat Description."](https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Behavior:Win32/SharpHound.AM&ThreatID=2147943927). Microsoft Security Intelligence.
 - “[Target Username vs Subject Username in windows logs](https://superuser.com/questions/1747379/target-username-vs-subject-username-in-windows-logs)”. SuperUser.
 
-### Elastic Documentation
+Elastic Documentation
 
 - ["Azure AD Logs Integration."](https://www.elastic.co/docs/reference/integrations/azure/adlogs). Elastic Docs.
 - ["ECS Cloud Field Reference."](https://www.elastic.co/docs/reference/ecs/ecs-cloud). Elastic Docs.
 - ["ScreenConnect Detection Rule — Command and Control via ChildProc."](https://www.elastic.co/docs/reference/security/prebuilt-rules/rules/windows/command_and_control_screenconnect_childproc). Elastic Security Rules.
 
-### MITRE ATT&CK
+MITRE ATT&CK
 
 - [T1569.002 — System Services: Service Execution](https://attack.mitre.org/techniques/T1569/002/).
 - [T1543.003 — Create or Modify System Service: Windows Service](https://attack.mitre.org/techniques/T1543/003/).
 - [T1047 — Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047/).
 - [T1574.009 — Hijack Execution Flow: Unquoted Service Path](https://attack.mitre.org/techniques/T1574/009/).
 
-### Windows Event Log References
+Windows Event Log References
 
 - [Event ID 22 — Security Log Encyclopedia](https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventid=90022).
 - [Event ID 5140 — A Network Share Object Was Accessed](https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventid=5140).
@@ -621,13 +621,13 @@ March 7, 2024 - Ransomware
 - [“Is Event ID 4688 a Useful Method of Detecting Process/DLL Injection?”](https://www.reddit.com/r/antivirus/comments/17bep1e/is_event_id_4688_a_useful_method_of_detecting/). Reddit.
 - [Data Source: Powershell Script Block Logging 4104 — Patrick Barreiss, Splunk](https://research.splunk.com/sources/5cfd0c72-d989-47a0-92f9-6edc6f8d3564/).
 
-### Other Official / Vendor Documentation
+Other Official / Vendor Documentation
 
 - ["Custom Event ID 6."](https://docs.oracle.com/cd/E19455-01/806-2901/custom-6/index.html). Oracle Docs.
 - ["Azure Error Code 50140 — Active Directory Sign-in."](https://www.manageengine.com/products/active-directory-audit/kb/azure-error-codes/azure-ad-sign-in-error-code-50140.html). ManageEngine.
 - ["PTASpy — Pass-Through Authentication."](https://aadinternals.com/post/pta/). AADInternals.
 
-### Articles & Blog Posts
+Articles & Blog Posts
 
 - ["What is Triage Artifact?"](https://www.hexnode.com/blogs/explained/what-is-triage-artifact/). Hexnode.
 - [“Unlocking the Mystery of Unquoted Service Paths: Another Opportunity for Privilege Escalation.”](https://blackpointcyber.com/blog/unlocking-the-mystery-of-unquoted-service-paths-another-opportunity-for-privilege-escalation/). Blackpoint.
@@ -643,7 +643,7 @@ March 7, 2024 - Ransomware
 - ["VSS Abuse Explained."](https://www.huntress.com/blog/vss-abuse-explained). Huntress.
 - ["RDP-Related Event Logs — Identification, Tracking, and Investigation."](https://ponderthebits.com/2018/02/windows-rdp-related-event-logs-identification-tracking-and-investigation/). PonderTheBits.
 
-### Browser & Network Forensics
+Browser & Network Forensics
 
 - ["Browser Forensics: How to Extract User Activity."](https://www.cyberforensicacademy.com/blog/browser-forensics-tools-how-to-extract-user-activity). CyberForensicAcademy.
 - [“Introducing LECmd!”](https://binaryforay.blogspot.com/2016/02/introducing-lecmd.html). binary foray.
@@ -651,30 +651,30 @@ March 7, 2024 - Ransomware
 - ["Detect Hosting Providers by IP Address ABN."](https://dev.to/tallytarik/detect-hosting-providers-by-ip-address-abn). TallyTarik (dev.to).
 - ["What is an SSH Key Fingerprint and How is It Generated?"](https://superuser.com/questions/421997/what-is-a-ssh-key-fingerprint-and-how-is-it-generated). SuperUser.
 
-### NTFS & File System Forensics
+NTFS & File System Forensics
 
 - ["A Journey Into NTFS: Part 3."](https://bromiley.medium.com/a-journey-into-ntfs-part-3-5e197a0cab58). Matt Bromiley, Medium.
 - ["NTFS Permissions — Structure of \$Secure File."](https://ntfs.com/ntfs-permissions-file-structure.htm). NTFS.com.
 - ["Forensic Insights: How the NTFS USN Journal \[\$J\] Reveals System Activity."](https://allenace.medium.com/forensic-insights-how-the-ntfs-usn-journal-j-reveals-system-activity-1e8afe4e337b). Allen Ace, Medium.
 
-### Community / Q&A
+Community / Q&A
 
 - ["Accessing Volume Shadow Copy VSS Snapshots from PowerShell."](https://stackoverflow.com/questions/14207788/accessing-volume-shadow-copy-vss-snapshots-from-powershell). StackOverflow.
 - ["Beachhead (definition)."](https://www.merriam-webster.com/dictionary/beachhead). Merriam-Webster Dictionary.
 
-### Videos
+Videos
 
 - [darkcyberhacks — Easiest Ways to Change Your Hostname in Parrot OS – You Won’t Believe How Simple It Is! | 2025 (YouTube)](https://youtu.be/AJ0xrx2M-II?si=gbQ8lmHccYLycHtA)
 
-### Other Write-ups
+Other Write-ups
 
 - Midwinter. "Waifu University Write Up." \[No longer publicly available as of November 2026\]
 
-### People Consulted
+People Consulted
 
 - [@bri5ee](https://x.com/bri5ee) — consulted during the investigation AND introduced me to this lab :3
 
-### Unusual Tools Discovered
+Unusual Tools Discovered
 
 - [SharpCollection](https://github.com/Flangvik/SharpCollection). Flangvik, Github.
 - [PTASpy](https://github.com/NestoriSyynimaa). Nestori Syynimaa, Github.
