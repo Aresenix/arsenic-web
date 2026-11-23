@@ -216,6 +216,8 @@ import Envelope from "@/assets/devices/envelope.svg"
 </style>
 
 <script>
+  import { coverFor } from "@/lib/covers"
+
   const KEY = import.meta.env.PUBLIC_LASTFM_KEY
   const USER = import.meta.env.PUBLIC_LASTFM_USER
   const PLACEHOLDER = "2a96cbd8b46e442fc41c2b86b821562f"
@@ -241,7 +243,10 @@ import Envelope from "@/assets/devices/envelope.svg"
       card.querySelector(".bar")!.classList.toggle("playing", playing)
 
       const img = card.querySelector<HTMLImageElement>(".art img")!
-      const src = track.image?.find((i: any) => i.size === "extralarge")?.["#text"]
+      let src = track.image?.find((i: any) => i.size === "extralarge")?.["#text"]
+      if (!src || src.includes(PLACEHOLDER)) {
+        src = coverFor(track.artist?.["#text"] ?? "", track.name)
+      }
       if (src && !src.includes(PLACEHOLDER)) {
         img.src = src
         img.hidden = false
@@ -263,6 +268,12 @@ import Envelope from "@/assets/devices/envelope.svg"
       update(card)
     }, 30000)
   }
+
+  // Browsers throttle timers in background tabs, so refresh as soon as the tab is visible again.
+  document.addEventListener("visibilitychange", () => {
+    const card = document.querySelector<HTMLElement>("music-card")
+    if (card && document.visibilityState === "visible") update(card)
+  })
 
   start()
   document.addEventListener("astro:page-load", start)
