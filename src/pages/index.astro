@@ -1,54 +1,43 @@
 ---
 import MetaPage from "@/components/MetaPage.astro"
 import Layout from "@/layouts/Layout.astro"
+import GitHub from "@/assets/icons/github.svg"
+import LinkedIn from "@/assets/icons/linkedin.svg"
+import Mail from "@/assets/icons/email.svg"
+import Phone from "@/assets/devices/phone.svg"
+import Laptop from "@/assets/devices/laptop.svg"
+import Envelope from "@/assets/devices/envelope.svg"
 ---
 
 <Layout>
   <MetaPage slot="head" />
   <dictionary-entry>
-    <h1>er·u·dite</h1>
-    <etymology-span>
-      <ipa-span>/ˈer(y)əˌdīt/</ipa-span>
-      adj. [L. <i>ēruditus</i>, instructed, pp. of <i>ērudīre</i> to instruct,
-      polish, lit. to free from roughness, f. ē- out + <i>rudis</i> rough,
-      untrained]
-    </etymology-span>
-    <ol>
-      <li>
-        having or showing deep, wide-ranging knowledge acquired through study;
-        learned (<i>an erudite scholar</i>).
-      </li>
-      <li>
-        (of writing, speech, or argument) reflecting such knowledge; scholarly (<i
-          >an erudite footnote</i
-        >).
-      </li>
-    </ol>
-    <hr>
-    <prose-content>
-      <p>
-        astro-erudite is
-        <a href="https://enscribe.dev" target="_blank" rel="noopener noreferrer"
-          >enscribe</a
-        >'s opinionated, unstyled static blogging template built with
-        <a href="https://astro.build" target="_blank" rel="noopener noreferrer"
-          >Astro</a
-        >
-        and native CSS. astro-erudite uses no UI or CSS framework and contains
-        minimal dependencies.
-      </p>
-      <p>
-        To use this template, check out the
-        <a
-          href="https://github.com/jktrn/astro-erudite"
-          target="_blank"
-          rel="noopener noreferrer"
-          >GitHub</a
-        >
-        repository. To learn more about why this template exists, read this blog
-        post: <a href="/blog/introducing-v2">Introducing astro-erudite v2</a>.
-      </p>
-    </prose-content>
+    <h1 class="typewriter">Arsenic</h1>
+
+    <link-grid>
+      <music-card>
+        <span class="label">listening to..</span>
+        <div class="art"><img alt="" hidden /></div>
+        <span class="song">Nothing yet</span>
+        <span class="artist"></span>
+        <div class="bar"></div>
+      </music-card>
+
+      <a class="phone" href="https://www.linkedin.com/in/jessica-setiadhi" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+        <Phone class="device" />
+        <LinkedIn class="glyph" />
+      </a>
+
+      <a class="laptop" href="https://github.com/Aresenix" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+        <Laptop class="device" />
+        <GitHub class="glyph" />
+      </a>
+
+      <a class="mail" href="mailto:jess.setiadhi@gmail.com" aria-label="Email">
+        <Envelope class="device" />
+        <Mail class="glyph" />
+      </a>
+    </link-grid>
   </dictionary-entry>
 </Layout>
 
@@ -62,47 +51,219 @@ import Layout from "@/layouts/Layout.astro"
       margin-block-start: -0.2em;
     }
 
-    ipa-span {
-      opacity: 0.6;
-    }
-
     h1 {
-      font-size: var(--step-2);
+      font-size: var(--step-6);
       line-height: calc(var(--leading-offset) + 1em);
       font-weight: var(--font-weight-medium);
       color: var(--foreground);
       margin-block-end: var(--space-2xs);
-    }
 
-    ol {
-      margin-block-start: var(--space-xs);
-      list-style: none;
-
-      li {
-        padding-inline-start: 1em;
-        text-indent: -1em;
-
-        &::before {
-          content: counter(list-item);
-          display: inline-block;
-          inline-size: 1em;
-          text-indent: 0;
-          font-weight: var(--font-weight-medium);
-        }
-
-        + li {
-          margin-block-start: var(--space-3xs);
-        }
+      &.typewriter {
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        border-right: 3px solid var(--primary);
+        width: 6ch;
+        animation:
+          type 0.6s ease-out forwards,
+          blink-caret 0.75s step-end infinite;
       }
     }
 
-    hr {
-      margin-block: var(--space-m);
-      border-block-start: 2px solid var(--border);
-    }
+    link-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-s);
+      max-inline-size: 36rem;
+      margin-block-start: var(--space-m);
 
-    prose-content {
-      margin-block-start: var(--space-xs);
+      > a,
+      > music-card {
+        position: relative;
+        display: block;
+        aspect-ratio: 1;
+        overflow: hidden;
+        border: 2px solid var(--border);
+        border-radius: 1rem !important;
+        color: var(--foreground);
+      }
+
+      > a {
+        text-decoration: none;
+        transition:
+          background-color 0.25s ease,
+          color 0.25s ease,
+          border-color 0.25s ease,
+          transform 0.25s ease;
+
+        &:hover {
+          background-color: var(--primary);
+          color: var(--primary-foreground);
+          border-color: var(--primary);
+          transform: translateY(-4px);
+        }
+      }
+
+      .device {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        transition:
+          transform 0.3s ease,
+          rotate 0.3s ease;
+      }
+
+      .glyph {
+        position: absolute;
+        inline-size: var(--glyph-size, 18%);
+        block-size: var(--glyph-size, 18%);
+        translate: -50% -50%;
+        transition:
+          transform 0.3s ease,
+          rotate 0.3s ease;
+      }
+
+      a:hover .device {
+        transform: scale(1.06);
+      }
+
+      a:hover .glyph {
+        transform: scale(1.15);
+      }
+
+      .phone .glyph { left: 50%; top: 50%; }
+      .laptop .glyph { left: 50%; top: 37.5%; --glyph-size: 20%; }
+      .mail .glyph { left: 50%; top: 69%; --glyph-size: 12%; }
+      
+      .phone .device,
+      .phone .glyph { rotate: 10deg; }
+      .phone:hover .device,
+      .phone:hover .glyph { rotate: 0deg; }
+
+      > music-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3xs);
+        padding: var(--space-s);
+        font-size: var(--step--1);
+
+        .label,
+        .artist {
+          color: var(--muted-foreground);
+        }
+
+        .song,
+        .artist {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .art {
+          position: relative;
+          flex: 1;
+          min-block-size: 0;
+          overflow: hidden;
+          background: var(--muted);
+          border: 2px solid var(--border);
+          border-radius: 0.75rem;
+
+          img {
+            position: absolute;
+            inset: 0;
+            inline-size: 100%;
+            block-size: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .bar {
+          position: relative;
+          overflow: hidden;
+          block-size: 4px;
+          margin-block-start: var(--space-3xs);
+          background: var(--border);
+
+          &::after {
+            content: "";
+            position: absolute;
+            inset: 0 100% 0 0;
+            background: var(--primary);
+          }
+
+          &.playing::after {
+            animation: scan 2.4s ease-in-out infinite alternate;
+          }
+        }
+      }
     }
   }
+
+  @keyframes type {
+    from { width: 0; }
+    to   { width: 6ch; }
+  }
+
+  @keyframes blink-caret {
+    50% { border-color: transparent; }
+  }
+
+  @keyframes scan {
+    from { inset: 0 85% 0 0; }
+    to   { inset: 0 0 0 85%; }
+  }
 </style>
+
+<script>
+  const KEY = import.meta.env.PUBLIC_LASTFM_KEY
+  const USER = import.meta.env.PUBLIC_LASTFM_USER
+  const PLACEHOLDER = "2a96cbd8b46e442fc41c2b86b821562f"
+
+  async function update(card: HTMLElement) {
+    if (!KEY || !USER) return
+    const url =
+      `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks` +
+      `&user=${encodeURIComponent(USER)}&api_key=${KEY}&limit=1&format=json`
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+      const raw = data?.recenttracks?.track
+      const track = Array.isArray(raw) ? raw[0] : raw
+      if (!track) return
+
+      const playing = track["@attr"]?.nowplaying === "true"
+      card.querySelector(".label")!.textContent = playing
+        ? "listening to.."
+        : "last played.."
+      card.querySelector(".song")!.textContent = track.name
+      card.querySelector(".artist")!.textContent = track.artist?.["#text"] ?? ""
+      card.querySelector(".bar")!.classList.toggle("playing", playing)
+
+      const img = card.querySelector<HTMLImageElement>(".art img")!
+      const src = track.image?.find((i: any) => i.size === "extralarge")?.["#text"]
+      if (src && !src.includes(PLACEHOLDER)) {
+        img.src = src
+        img.hidden = false
+      } else {
+        img.hidden = true
+      }
+    } catch {
+      // keep the placeholder text if the request fails
+    }
+  }
+
+  function start() {
+    const card = document.querySelector<HTMLElement>("music-card")
+    if (!card || card.dataset.started) return
+    card.dataset.started = "true"
+    update(card)
+    const timer = setInterval(() => {
+      if (!card.isConnected) return clearInterval(timer)
+      update(card)
+    }, 30000)
+  }
+
+  start()
+  document.addEventListener("astro:page-load", start)
+</script>

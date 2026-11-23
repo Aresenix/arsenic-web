@@ -1,0 +1,105 @@
+---
+import MetaPage from "@/components/MetaPage.astro"
+import Layout from "@/layouts/Layout.astro"
+---
+
+<Layout>
+  <MetaPage slot="head" />
+  <about-entry>
+    <h1 class="typewriter">About</h1>
+    <prose-content>
+      <p>
+        Hi, I'm Arsenic :3
+      </p>
+
+      <p>
+        I've always been someone that's incredibly in love with the process of things. Whether it
+        be humanities, STEM, or anything in between-- I enjoy a lot of them! 
+      </p>
+
+      <p>
+        I went to pursue technology instead after wanting to be an animator during my formative years.
+        I thought technology was the perfect bridge-- it has everything anyone can think of and it's broadcasted
+        to about everyone with internet access. 
+      </p>
+
+      <p>
+        After some contemplating on which route to take, I saw who used to be an acquaintance of mine (now
+        close friend) messaged a Discord server that I was a part of in high school for Computer Science. He 
+        was inviting people who are passionate in cybersecurity to join SWIFT. I decided to give cybersecurity
+        a try, and truly enjoyed how deeply systematic and process heavy the field is. You can see my work in here!
+      </p>
+
+      <p>
+        Despite my introduction being really more cybersecurity heavy-- I'm always open to talking and
+        meeting new people :D feel free to hit me up! I'm always down to talk about anything hehe :3c 
+      </p>
+
+      <p>
+        Also, thanks to these people that help me to where I am today:
+      </p>
+
+      <p>
+      @bri5ee - my mentor :3 I learned a lot from him-- thank you for your patience, kindness, and help throughout &lt;3
+      </p>
+
+      <p>
+      @dylan/dylan tran/nigel/nigerald/salsa guzzler/etc - actually changed my whole career trajectory :,D I wouldn't know where I'd be right now if he didn't send that text AND continue to do cyber for the love of the game :p
+      </p>
+
+      <p>
+      I am inspired by these websites, check them out! :
+      </p>
+      <p>
+        <a href="https://enscribe.dev" target="_blank" rel="noopener noreferer">enscribe.dev</a>
+      </p>
+      <p>
+        <a href="https://phao.dev/" target="_blank" rel="noopener noreferer">phao.dev</a>
+      </p>
+    </prose-content>
+  </about-entry>
+</Layout>
+
+<style>
+  about-entry {
+    display: block;
+    font-size: var(--step-0);
+    color: var(--muted-foreground);
+
+    @media (width >= 64rem) {
+      margin-block-start: -0.2em;
+    }
+
+    h1 {
+      font-size: var(--step-6);
+      line-height: calc(var(--leading-offset) + 1em);
+      font-weight: var(--font-weight-medium);
+      color: var(--foreground);
+      margin-block-end: var(--space-2xs);
+
+      &.typewriter {
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        border-right: 5px solid var(--primary);
+        width: 4.4ch;
+        animation:
+          type 0.6s ease-out forwards,
+          blink-caret 0.75s step-end infinite;
+      }
+    }
+
+    prose-content {
+      margin-block-start: var(--space-xs);
+    }
+  }
+
+  @keyframes type {
+    from { width: 0; }
+    to   { width: 4.4ch; }
+  }
+
+  @keyframes blink-caret {
+    50% { border-color: transparent; }
+  }
+</style>

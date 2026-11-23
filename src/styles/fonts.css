@@ -114,8 +114,16 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Gubera Mono";
+  src: url("../assets/fonts/GuberaMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
 :root {
   --font-sans: "IBM Plex Sans", "IBM Plex Sans Fallback", sans-serif;
-  --font-mono: "IBM Plex Mono", "IBM Plex Mono Fallback", monospace;
+  --font-mono: "Gubera Mono", "IBM Plex Mono", "IBM Plex Mono Fallback", monospace;
   --font-math: "STIX Two Math", math;
 }

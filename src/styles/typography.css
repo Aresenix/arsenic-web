@@ -5,6 +5,9 @@
   --step-1: clamp(1.125rem, 1.0418rem + 0.4059vw, 1.35rem);
   --step-2: clamp(1.2656rem, 1.1346rem + 0.6392vw, 1.62rem);
   --step-3: clamp(1.4238rem, 1.2315rem + 0.9383vw, 1.944rem);
+  --step-4: clamp(1.602rem, 1.3363rem + 1.3287vw, 2.3328rem);
+  --step-5: clamp(1.802rem, 1.4331rem + 1.7994vw, 2.7994rem);
+  --step-6: clamp(2.0272rem, 1.5347rem + 2.4027vw, 3.3592rem);
 
   --font-weight-normal: 400;
   --font-weight-medium: 450;
@@ -32,6 +35,7 @@ body {
 }
 
 :where(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-mono);
   text-wrap: balance;
 }
 
@@ -82,5 +86,25 @@ prose-content {
 
   :is(p, li) {
     color: var(--prose-foreground);
+  }
+}
+
+/* Light mode: dark-on-cream text reads thinner than cream-on-dark,
+   so nudge body text up slightly. IBM Plex Sans is variable, so 450 is a real weight. */
+:root[data-theme="light"] body {
+  font-weight: 450;
+}
+
+:root[data-theme="light"] prose-content :is(p, li) {
+  color: var(--foreground);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) body {
+    font-weight: 450;
+  }
+
+  :root:not([data-theme]) prose-content :is(p, li) {
+    color: var(--foreground);
   }
 }
