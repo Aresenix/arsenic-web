@@ -12,7 +12,7 @@ import { headingNamespace } from "./src/lib/heading-namespace"
 import { headingAnchors } from "./src/lib/heading-anchors"
 
 export default defineConfig({
-  site: "https://arsenic-web-chi.vercel.app",
+  site: "https://www.aresenix.dev",
   compressHTML: true,
   prefetch: { prefetchAll: true },
   integrations: [
