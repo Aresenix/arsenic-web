@@ -462,7 +462,7 @@ I went back to Windows Event Log and re-checked what seems to be out of place/su
 
 Question 3, “What was the name of the DLL installed onto one of the domain controller's processes to monitor for credentials?”. I had to do some troubleshooting for this one. My initial query was to go with “event.code: ‘7’”, but that wasn't recorded at all. “event.code: ‘1’” and “event.code: ‘11’” would take quite a while to comb through-- and after some searching, I discovered “event.code: ‘4688’” ([u/TheHappiestHam, "Is Event 4688 a Useful Method of Detecting Process/DLL Injection?"](https://www.reddit.com/r/antivirus/comments/17bep1e/is_event_id_4688_a_useful_method_of_detecting/)). In here, I went to do my query of “event.code: ‘4688’” and “host.name: ‘cc-dc-01’” and “\*.dll”. Surprisingly, those logged absolutely nothing. I went to Midwinter's Waifu University writeup, and saw their KQL query.
 
-It was roughly the same with a few tweaks. I went to consult to [my mentor](https://x.com/bri5ee) and told him the trouble I was going through, and double checked what exactly I did wrong if \*.dll by itself actually showed queries. He told me that in this specific instance, the KQL query specifically requires you to do \*.dll\* due to \*.dll interpreting it as .dll" instead of .dll, the way \*.dll\* would. I mentally noted (and physically noted) that for all other EDRs I will be coming across. I refined my query and did “event.code: ‘4688’”, “host.name: ‘cc-dc-01’”, \*.dll\*, and restricted the time to be around 3/6/2026 - 3/7/2026. I only saw 18 documents, and it even logged “winlog.event_data.CommandLine”! I scrolled down and found the answer, PTASpy.dll.
+It was roughly the same with a few tweaks. I went to consult to [my mentor](https://x.com/bri5ee) and told him the trouble I was going through, and double checked what exactly I did wrong if \*.dll by itself actually showed queries. He told me that in this specific instance, the KQL query specifically requires you to do \*.dll\* due to \*.dll interpreting it as .dll" instead of .dll, the way \*.dll\* would. I mentally noted (and physically noted) that for all other EDRs I will be coming across. I refined my query and did “event.code: ‘4688’”, “host.name: ‘cc-dc-01’”, \*.dll\*, and restricted the time to be around 3/6/2024 - 3/7/2024. I only saw 18 documents, and it even logged “winlog.event_data.CommandLine”! I scrolled down and found the answer, PTASpy.dll.
 
 ![Figure 61: PTASpy.dll is injected for credential monitoring.](./assets/image43.png)
 
@@ -510,7 +510,7 @@ I also saw that in the "Tools" section, there is an MFTECmd by Eric Zimmerman th
 
 *Figure 66: In the FileSystem folder, these are all the files that are parsed by MFTECmd.*
 
-I immediately went to \$MFT since the question asked for exactly that. Looking through “CC-Admin\\Documents” actually didn't yield me the correct results at all, except for a lead-- which was “database.bak.rpt.kh1ftzx” within “CC-Admin\\Documents” on 3/7/2026 at 03:09:24, around the time of the compromise still ongoing.
+I immediately went to \$MFT since the question asked for exactly that. Looking through “CC-Admin\\Documents” actually didn't yield me the correct results at all, except for a lead-- which was “database.bak.rpt.kh1ftzx” within “CC-Admin\\Documents” on 3/7/2024 at 03:09:24, around the time of the compromise still ongoing.
 
 ![Figure 67: database.bak.rpt .kh1ftzx under CC-AdminDocuments.](./assets/image2.png)
 
