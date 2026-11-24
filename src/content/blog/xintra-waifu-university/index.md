@@ -58,7 +58,7 @@ Question 3 then asks, “What was the file extension the ransomware added to enc
 
 Question 1 of this phase asks, “Our security team mentioned that there was a number of failed logons to the victims Identity Provider (Entra ID). What was the full user agent string that was responsible for these attempts?”. I’m currently in the “Azure Logs”. I noticed right away from the bar graph that 3/3/2024 contains a spike of documents, so I specifically clicked around that date. I didn’t know what a user agent was, so I looked up, “what is a user agent?” since I did not know what it was. A user agent looks like this “Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36” ([“What Is a User Agent? A Complete Guide for 2026”, Loyola](https://www.browserless.io/blog/what-is-a-user-agent)). In this example from the author’s article, a user agent lets you know what a user’s software is, which also includes the operating system and its version, along with the browser.
 
-I clicked on the very first document in an Azure Log to check what is within a document. I knew that Entra ID was both connected to Microsoft– but I went to ask my mentor on which logs to seek out for. When they were still doing IR, they answered both Azure and Office 365 logs. They also told me to look for failing logins that are suspiciously high. So, I’m currently seeking a high amount of failing logins, a user agent, and in both Azure logs and Office 365 logs. I went through and searched up, “how to check for a failed login in azure logs in elastic” and came across this article titled “Microsoft Entra ID Logs” under their “Azure” category. I looked at the sign-in log example and saw something called “result_type” and a 5 digit number. I then looked up “result type 50140”, which is apparently a sign-in error ([“Azure AD Sign-In Error 50140”, ADAudit Plus](https://www.manageengine.com/products/active-directory-audit/kb/azure-error-codes/azure-ad-sign-in-error-code-50140.html)). I then went to see if there are any codes that align with failed logons. Since I am seeking out an outside attacker AND a high level of logon failures, chances are it may be invalid credentials. There was “AADSTS50126” that signals invalid credentials ([“Microsoft Entra authentication and authorization error codes”, Microsoft Ignite](https://learn.microsoft.com/en-us/entra/identity-platform/reference-error-codes)). I typed out “result” in KQL, and “azure.signinlogs.result_type: ‘50126’”-- which yielded ONLY 32 documents in the full lab, and it’s all in the morning of 3/3/2024. I then went through the “Field statistics” to see “user_agent.original”, “Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36” was it. Although the bar graph showed that it started at 3/3/2024 at 11:00:01 AM– the amount of failure logins ramped up at 3/3/2024 at 11:19:44 and continuously on– switching between users alternatively between such a short amount of time. Unfortunately I cannot show you the full picture due to screen limitations.
+I clicked on the very first document in an Azure Log to check what is within a document. I knew that Entra ID was both connected to Microsoft– but I went to ask my mentor on which logs to seek out for. When they were still doing IR, they answered both Azure and Office 365 logs. They also told me to look for failing logins that are suspiciously high. So, I’m currently seeking a high amount of failing logins, a user agent, and in both Azure logs and Office 365 logs. I went through and searched up, “how to check for a failed login in azure logs in elastic” and came across this article titled “Microsoft Entra ID Logs” under their “Azure” category. I looked at the sign-in log example and saw something called “result_type” and a 5 digit number. I then looked up “result type 50140”, which is apparently a sign-in error ([“Azure AD Sign-In Error 50140”, ADAudit Plus](https://www.manageengine.com/products/active-directory-audit/kb/azure-error-codes/azure-ad-sign-in-error-code-50140.html)). I then went to see if there are any codes that align with failed logons. Since I am seeking out an outside attacker AND a high level of logon failures, chances are it may be invalid credentials. There was “AADSTS50126” that signals invalid credentials ([“Microsoft Entra authentication and authorization error codes”, Microsoft Ignite](https://learn.microsoft.com/en-us/entra/identity-platform/reference-error-codes)). I typed out “result” in KQL, and “azure.signinlogs.result_type: ‘50126’”-- which yielded ONLY 32 documents in the full lab, and it’s all in the morning of 3/3/2024. I then went through the “Field statistics” to see “user_agent.original”, “Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36” was it. Although the bar graph showed that it started at 3/3/2024 at 11\:00\:01 AM– the amount of failure logins ramped up at 3/3/2024 at 11\:19\:44 and continuously on– switching between users alternatively between such a short amount of time. Unfortunately I cannot show you the full picture due to screen limitations.
 
 ![Figure 3: the full user agent string responsible for the login attempts](./assets/image62.png)
 
@@ -94,7 +94,7 @@ Then question 3 is asking, “How many unique users did the threat actor attempt
 
 *Figure 8: The “user.name” section showing 8 distinct values.*
 
-Then, question 4 asks– “What was the User Principal Name (UPN) of the user the threat actor succeeded in accessing? *Format: egirl@waifu.phd”*. I went to look at the documents again, still having the “source.as.organization.name” as “AMAZON-02”. Though, I started looking at 3/3/2024 from 11:19:44 as that’s when the high volume of failed logins started. I pivoted after not being successful. I went to look for “azure.signinlogs.result_type:‘0’” which is for successful logins. I noticed that there are multiple fields that signals how the user gets authorized and authenticated to the Waifu University system, but these are the ones I mainly noted down as they contain more than enough information for investigation purposes:
+Then, question 4 asks– “What was the User Principal Name (UPN) of the user the threat actor succeeded in accessing? *Format: egirl@waifu.phd”*. I went to look at the documents again, still having the “source.as.organization.name” as “AMAZON-02”. Though, I started looking at 3/3/2024 from 11\:19\:44 as that’s when the high volume of failed logins started. I pivoted after not being successful. I went to look for “azure.signinlogs.result_type:‘0’” which is for successful logins. I noticed that there are multiple fields that signals how the user gets authorized and authenticated to the Waifu University system, but these are the ones I mainly noted down as they contain more than enough information for investigation purposes:
 
 - “azure.signinlogs.properties.authentication_details”: shows through what legitimate method the user is able to get into Waifu University’s system.
 - “azure.signinlogs.properties.applied_conditional_access_policies”: shows what policies are applied to be allowed to get into the Waifu University system.
@@ -117,7 +117,7 @@ Looking through the documents of a successful login through all of these fields�
 
 *Figure 11: More MFA details and requirements of who to provide MFA*
 
-The “azure.signinlogs.properties.user_principal_name” actually shows this time as well, which is “ivanderplas1@waifu.phd”. Additionally, the “azure.signinlogs.category” shows that it was a “SignInLogs”, which meant that there is a user actually interacting with the interface instead of a client/app for Ignacio on 3/3/2024 at 13:03:17.860. The “client.ip” was completely different, showing “207.246.70.192”, and “source.as.organization.name” as “AS-CHOOPA” (which is apparently a concerning name according to several links shown when I looked up “AS-CHOOPA” on Google)-- showing completely different “client.ip” and “source.as.organization.name” than the usual “73.180.208.236” and “COMCAST-7922”.
+The “azure.signinlogs.properties.user_principal_name” actually shows this time as well, which is “ivanderplas1@waifu.phd”. Additionally, the “azure.signinlogs.category” shows that it was a “SignInLogs”, which meant that there is a user actually interacting with the interface instead of a client/app for Ignacio on 3/3/2024 at 13\:03\:17.860. The “client.ip” was completely different, showing “207.246.70.192”, and “source.as.organization.name” as “AS-CHOOPA” (which is apparently a concerning name according to several links shown when I looked up “AS-CHOOPA” on Google)-- showing completely different “client.ip” and “source.as.organization.name” than the usual “73.180.208.236” and “COMCAST-7922”.
 
 ![Figure 12: azure.signinlogs.category showing SignInLogs](./assets/image48.png)
 
@@ -140,7 +140,7 @@ The next question, question 5 asks, “What was the most likely method the threa
 - SIM Hacking: manipulating a mobile carrier service into sending PIIs into an attacker’s SIM card ([“SIM Swapping”, ProofPoint](https://www.proofpoint.com/us/threat-reference/sim-swapping))
 - App Consent: a phishing attack that allows an attacker to abuse/exploit an application’s permissions that is meant for the victim ([“A New App Consent Attack: Hidden Consent Grant”, Malyanker](https://www.semperis.com/blog/app-consent-attack-hidden-consent-grant/))
 
-Knowing that there are a high amount of failed logins, my most likely choice already was MFA Push Fatigue. I went and typed in “azure.signinlogs.result_type: ‘50074’” (user didn’t pass MFA challenge) which surprisingly didn’t yield much results. I looked up to see if there are any other MFA related codes. I came across this ask in Microsoft Ignite by Paul McQuaid of [“User is trying to login to Azure using MFA but the code they enter from authenticator is wrong”](https://learn.microsoft.com/en-us/answers/questions/5630525/user-is-trying-to-login-to-azure-using-mfa-but-the), and the ask mentioned “500121”, which is not documented in the official “Microsoft Entra authentication and authorization error codes”. Looking using that code yielded non-scattered results. “Ivanderplas1” is more than half of the documents. Furthermore, this is happening at the same time of the compromise on 3/3/2024 at 12:59:31, in milliseconds, and it is all “SignInLogs”.
+Knowing that there are a high amount of failed logins, my most likely choice already was MFA Push Fatigue. I went and typed in “azure.signinlogs.result_type: ‘50074’” (user didn’t pass MFA challenge) which surprisingly didn’t yield much results. I looked up to see if there are any other MFA related codes. I came across this ask in Microsoft Ignite by Paul McQuaid of [“User is trying to login to Azure using MFA but the code they enter from authenticator is wrong”](https://learn.microsoft.com/en-us/answers/questions/5630525/user-is-trying-to-login-to-azure-using-mfa-but-the), and the ask mentioned “500121”, which is not documented in the official “Microsoft Entra authentication and authorization error codes”. Looking using that code yielded non-scattered results. “Ivanderplas1” is more than half of the documents. Furthermore, this is happening at the same time of the compromise on 3/3/2024 at 12\:59\:31, in milliseconds, and it is all “SignInLogs”.
 
 ![Figure 15: user.name showing ivanderplas1 being the main target with over half of “500121” result_type.](./assets/image27.png)
 
@@ -156,9 +156,9 @@ Question 6 then asks, “What was the IP that successfully logged into the envir
 
 *Figure 17: is Figure 14 with the concerning IP*
 
-Question 7 asks, “What was the SSH fingerprint for the IP? Note: Make sure to look for historical info around the time of the intrusion as IP addresses may frequently change owners.*Format: ab:cd:ef:12:34:56:78:90:ab:cd:ef:12:34:56:78:90”* I looked up what exactly an SSH fingerprint is, and it seems to be a way to check for integrity purposes like hashes do ([“What is a SSH key fingerprint and how is it generated?”, Kit Ho](https://superuser.com/questions/421997/what-is-a-ssh-key-fingerprint-and-how-is-it-generated)). Since we’re looking for historical information that’s specifically for a technical aspect of a data– I thought of Shodan. I copied and pasted the IP address ("207.246.70.192"). However, due to the fact that I'm doing it as of 2026-- the fingerprint that Shodan shows won't match the one that is being seeked out by the question.
+Question 7 asks, “What was the SSH fingerprint for the IP? Note: Make sure to look for historical info around the time of the intrusion as IP addresses may frequently change owners.*Format: ab\:cd\:ef\:12\:34\:56\:78\:90\:ab\:cd\:ef\:12\:34\:56\:78\:90”* I looked up what exactly an SSH fingerprint is, and it seems to be a way to check for integrity purposes like hashes do ([“What is a SSH key fingerprint and how is it generated?”, Kit Ho](https://superuser.com/questions/421997/what-is-a-ssh-key-fingerprint-and-how-is-it-generated)). Since we’re looking for historical information that’s specifically for a technical aspect of a data– I thought of Shodan. I copied and pasted the IP address ("207.246.70.192"). However, due to the fact that I'm doing it as of 2026-- the fingerprint that Shodan shows won't match the one that is being seeked out by the question.
 
-If you are a member of Shodan, you would be able to see the "timeline" portion and look through March 3rd and beyond as that is when the intrusion happens. This will then yield the result of "97:2e:5d:5e:ca:d1:15:a9:51:ed:8b:0e:55:f1:6a:ee"
+If you are a member of Shodan, you would be able to see the "timeline" portion and look through March 3rd and beyond as that is when the intrusion happens. This will then yield the result of "97\:2e\:5d\:5e\:ca\:d1\:15\:a9\:51\:ed\:8b\:0e\:55\:f1\:6a\:ee"
 
 ![Figure 18: Shodan results unfortunately showing the incorrect SSH fingerprint results for the IP. But Shodan has a “Timeline” feature if you are a member, and is able to get the accurate results off of it.](./assets/image4.png)
 
@@ -172,19 +172,19 @@ However, that is not the case in this specific instance. A "beachhead" is "an ar
 
 After looking through the logs and looking around the DMZ subnet-- within the Windows Event Logs in specific-- that way, we can see the host/agent names that are being logged into, along with the target name, and the event codes that indicate different actions being performed. I saw how similar the document was to Azure Logs, and noticed something called “event.code” in the field name. I went and looked up what that is– to find out that it’s more or less similar to Azure's result types ([“Appendix L: Events to monitor”, Microsoft Ignite](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/appendix-l--events-to-monitor)). I also recalled that my mentor mentioned about the differences of SubjectUserName and TargetUserName ([“Target Username vs Subject Username in windows logs”, anon-e-mouse](https://superuser.com/questions/1747379/target-username-vs-subject-username-in-windows-logs)), in which TargetUserName is a user that are using valid credentials, but MAY be different, hence, the targeted username.
 
-Ignazio is the user being compromised, so I looked through all the DMZ IP Addresses that were provided-- and the only one that was available in specific from “winlog.event_data.TargetUserName: ‘ivanderplas1’”, “event.code: ‘4624’", and “winlog.event_data.IpAddress: ‘10.0.0.12’”, and they're all from "CC-JMP-01". Additionally, in the dashboard, there's a spike of repeated, 12 successful logins from 3/3/2024 on 13:37 - 3/3/2024 14:40 (it's bigger when you go full screen), with each different unique “winlog.event_data.TargetLogonID”, yet all stayed the same workstation name and agent.name/host name. "CC-JMP-01" is the answer to the question. Side note, each logon IDs was different. Logon IDs are meant to specify a user or a session-- it is a UNIQUE tracking code. Multiple of those each signals different logons.
+Ignazio is the user being compromised, so I looked through all the DMZ IP Addresses that were provided-- and the only one that was available in specific from “winlog.event_data.TargetUserName: ‘ivanderplas1’”, “event.code: ‘4624’", and “winlog.event_data.IpAddress: ‘10.0.0.12’”, and they're all from "CC-JMP-01". Additionally, in the dashboard, there's a spike of repeated, 12 successful logins from 3/3/2024 on 13\:37 - 3/3/2024 14\:40 (it's bigger when you go full screen), with each different unique “winlog.event_data.TargetLogonID”, yet all stayed the same workstation name and agent.name/host name. "CC-JMP-01" is the answer to the question. Side note, each logon IDs was different. Logon IDs are meant to specify a user or a session-- it is a UNIQUE tracking code. Multiple of those each signals different logons.
 
 ![Figure 19: ivanderplas1 being signed in at 10.0.0.12 successfully during time of compromise.](./assets/image38.png)
 
 *Figure 19: ivanderplas1 being signed in at 10.0.0.12 successfully during time of compromise.*
 
-![Figure 20: 3/3/2024 @ 13:37:32.802 with different TargetLogonId yet same TargetUserSid](./assets/image50.png)
+![Figure 20: 3/3/2024 @ 13\:37\:32.802 with different TargetLogonId yet same TargetUserSid](./assets/image50.png)
 
-*Figure 20: 3/3/2024 @ 13:37:32.802 with different TargetLogonId yet same TargetUserSid*
+*Figure 20: 3/3/2024 @ 13\:37\:32.802 with different TargetLogonId yet same TargetUserSid*
 
-![Figure 21: 3/3/2024 @ 13:37:39.631 with ANOTHER DIFFERENT TargetLogonId yet same TargetUserSid.](./assets/image39.png)
+![Figure 21: 3/3/2024 @ 13\:37\:39.631 with ANOTHER DIFFERENT TargetLogonId yet same TargetUserSid.](./assets/image39.png)
 
-*Figure 21: 3/3/2024 @ 13:37:39.631 with ANOTHER DIFFERENT TargetLogonId yet same TargetUserSid.*
+*Figure 21: 3/3/2024 @ 13\:37\:39.631 with ANOTHER DIFFERENT TargetLogonId yet same TargetUserSid.*
 
 Ironically, this also answers question 2 of this section, which is: “What was the hostname of the threat actor's device used to get into the network?” And if we look at the workstation names, this is the name of the device that the compromised account is using-- which is "283d12e66790". Workstation name is also called a "computer name" or "hostname", which identifies the name of said device on this network ([“Workstation Name \[OpenWindows User’s Guide\]”, Oracle](https://docs.oracle.com/cd/E19455-01/806-2901/custom-6/index.html)).
 
@@ -222,9 +222,9 @@ Question 1 of this section asks, “One of our analysts was able to identify the
 
 There were other forms of reconnaissance, in which the attacker went through “AppData” and “ProgramData”. Then to dig in deeper, I checked through sysmon in order-- and filtered through the same dates (3/3/2024 - 3/4/2024) and sought out commands that has “sc.exe” or “sc” in them, as they're related to Windows services. I found that the attacker queried ALL services, copied all information, and pasted it on notepad on the very next line. I checked notepad and found “update.log”, which contains every service and their status.
 
-![Figure 27: services are being queried at 3/3/2024 5:46:52 PM on the jumphost.](./assets/image11.png)
+![Figure 27: services are being queried at 3/3/2024 5\:46\:52 PM on the jumphost.](./assets/image11.png)
 
-*Figure 27: services are being queried at 3/3/2024 5:46:52 PM on the jumphost.*
+*Figure 27: services are being queried at 3/3/2024 5\:46\:52 PM on the jumphost.*
 
 ![Figure 28: 1-2 minutes later, notepad is opened and update.log is there.](./assets/image47.png)
 
@@ -238,23 +238,23 @@ I then looked for “C:\\ProgramData\\” within sysmon, as “ProgramData” is
 
 Question 2 then asks “What was the MITRE ATT&CK technique that the threat actor used to escalate privilege? *Format: T1111.111”*. This question took quite a bit of effort. I looked up which MITRE ATT&CK are related to services. I initially thought it was T1569 since it’s a system service abuse, specifically [T1569.002](https://attack.mitre.org/techniques/T1569/002/) since it is specifically related to Windows. This technique involves executing malicious payloads/commands. I looked through the “Procedure Examples” for this and looked through the machine if there are anything similar to the examples, which there are none. I then thought it’s also T1543, which is for persistence purposes– and specifically [T1543.003](https://attack.mitre.org/techniques/T1543/003/) as the attacker may be modifying Windows’ services. That wasn’t it either.
 
-I began to look for keywords containing anything “waifu” in sysmon as we are targeting that. I noticed on 3/3/2024 at 5:53:40 PM, using ivanderplas1, the attacker uses wmic.exe and is getting all of the services’ name, path names, display names, and the start mode. Wmic.exe is used for system management ([“Windows Management Instrumentation overview”, Microsoft Ignite](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-xp/bb490814(v=technet.10))). I had a hunch it may be used for enumeration, which was confirmed by this article titled [“How do attackers use wmic?” by NHI Mgmt Group Editorial Team](https://nhimg.org/faq/how-do-attackers-use-wmic/).
+I began to look for keywords containing anything “waifu” in sysmon as we are targeting that. I noticed on 3/3/2024 at 5\:53\:40 PM, using ivanderplas1, the attacker uses wmic.exe and is getting all of the services’ name, path names, display names, and the start mode. Wmic.exe is used for system management ([“Windows Management Instrumentation overview”, Microsoft Ignite](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-xp/bb490814(v=technet.10))). I had a hunch it may be used for enumeration, which was confirmed by this article titled [“How do attackers use wmic?” by NHI Mgmt Group Editorial Team](https://nhimg.org/faq/how-do-attackers-use-wmic/).
 
 ![Figure 30: ivanderplas1 querying all service information using wmic during time of compromise and in compromised host.](./assets/image9.png)
 
 *Figure 30: ivanderplas1 querying all service information using wmic during time of compromise and in compromised host.*
 
-Then on 3/3/2024 at 6:16:21 PM, Waifu Service was started in the CC-JMP-01 host.
+Then on 3/3/2024 at 6\:16\:21 PM, Waifu Service was started in the CC-JMP-01 host.
 
 ![Figure 31: ivanderplas1 starting “Waifu Service” after executing wmic.](./assets/image36.png)
 
 *Figure 31: ivanderplas1 starting “Waifu Service” after executing wmic.*
 
-Then on 3/3/2024 at 6:21:26 PM, the user is not ivanderplas1 anymore– it’s NT AUTHORITY/SYSTEM, which is executing “WaifuSC.exe”.
+Then on 3/3/2024 at 6\:21\:26 PM, the user is not ivanderplas1 anymore– it’s NT AUTHORITY/SYSTEM, which is executing “WaifuSC.exe”.
 
-![Figure 32: NT AUTHORITYSYSTEM executing WaifuSC.exe on 3/3/2024 at 6:21:26 PM on the compromised CC-JMP-01 host.](./assets/image72.png)
+![Figure 32: NT AUTHORITYSYSTEM executing WaifuSC.exe on 3/3/2024 at 6\:21\:26 PM on the compromised CC-JMP-01 host.](./assets/image72.png)
 
-*Figure 32: NT AUTHORITY\\SYSTEM executing WaifuSC.exe on 3/3/2024 at 6:21:26 PM on the compromised CC-JMP-01 host.*
+*Figure 32: NT AUTHORITY\\SYSTEM executing WaifuSC.exe on 3/3/2024 at 6\:21\:26 PM on the compromised CC-JMP-01 host.*
 
 I then look up for a MITRE ATT&CK that involved using wmic for enumeration, then later on escalated their privileges to NT AUTHORITY\\SYSTEM by executing a service. I also thought it was [T1047](https://attack.mitre.org/techniques/T1047/)since it’s also for WMI abuse. However, it is also the wrong answer. After quite some time of researching, I discovered “Hijack Execution Flow: Path Interception by Unquoted Path”, which is the answer, “[T1574.009](https://attack.mitre.org/techniques/T1574/009/)”. According to MITRE ATT&CK, the attackers can exploit a path that is lacking in quotations (see Figure 32). The reason why this happens is because of two reasons: the user has write privileges and Windows itself runs whatever service in the path as an executable until there’s a service that actually gets executed ([“Unlocking the Mystery of Unquoted Service Paths: Another Opportunity for Privilege Escalation”, Fender](https://blackpointcyber.com/blog/unlocking-the-mystery-of-unquoted-service-paths-another-opportunity-for-privilege-escalation/)).
 
@@ -283,17 +283,17 @@ Question 1 of this phase asks, “What did the threat actor successfully run as 
 - Havoc
 - AnyDesk
 
-I actually found this when I was looking through “C:\\ProgramData\\” for sysmon-- which is also where waifu.exe is, on 3/3/2024 at 6:21:26 PM. The answer is “ScreenConnect”.
+I actually found this when I was looking through “C:\\ProgramData\\” for sysmon-- which is also where waifu.exe is, on 3/3/2024 at 6\:21\:26 PM. The answer is “ScreenConnect”.
 
-![Figure 36: ScreenConnect being ran by NT AUTHORITYSYSTEM on 3/3/2024 at 6:21:26 PM.](./assets/image31.png)
+![Figure 36: ScreenConnect being ran by NT AUTHORITYSYSTEM on 3/3/2024 at 6\:21\:26 PM.](./assets/image31.png)
 
-*Figure 36: ScreenConnect being ran by NT AUTHORITY\\SYSTEM on 3/3/2024 at 6:21:26 PM.*
+*Figure 36: ScreenConnect being ran by NT AUTHORITY\\SYSTEM on 3/3/2024 at 6\:21\:26 PM.*
 
 Question 2 is “What was the domain the remote access tool communicated to? *Format: example.domain.com”*. In this one, I’m still going to be in sysmon logs-- I filtered through Event ID 22 and specifically looked for “ScreenConnect” within the same date range, ran as NT AUTHORITY\\SYSTEM, and between 3/3/2024 - 3/4/2024. I found this domain,  “instance-i77ws2-relay.screenconnect.com”, and was rather suspicious. So I typed in that exact domain and did some research. This led me to find out something called “Relay Server”-- which, according to ["Relay Server" by NHI Mgmt Group](https://nhimg.org/glossary/relay-server/), is generally used in applications that require long, maintained connections (the website provides an example of WebSockets). Which, then led me to look up if relay servers are essential in remote management applications such as Screenconnect and/or AnyDesk-- and it is. The answer is “instance-i77ws2-relay.screenconnect.com”.
 
-![Figure 37: instance-i77ws2-relay.screenconnect.com connected to ScreenConnect and is being communicated to. It is executed as NT AUTHORITYSYSTEM on 3/3/2024 at 6:21:31 PM.](./assets/image61.png)
+![Figure 37: instance-i77ws2-relay.screenconnect.com connected to ScreenConnect and is being communicated to. It is executed as NT AUTHORITYSYSTEM on 3/3/2024 at 6\:21\:31 PM.](./assets/image61.png)
 
-*Figure 37: instance-i77ws2-relay.screenconnect.com connected to ScreenConnect and is being communicated to. It is executed as NT AUTHORITY\\SYSTEM on 3/3/2024 at 6:21:31 PM.*
+*Figure 37: instance-i77ws2-relay.screenconnect.com connected to ScreenConnect and is being communicated to. It is executed as NT AUTHORITY\\SYSTEM on 3/3/2024 at 6\:21\:31 PM.*
 
 Question 3 then asks, “Once the threat actor was able to escalate their privileges on the beachhead host, they ran an interesting payload. It looks like a threat actor replaced an existing .exe with some type of malware. What is the full path of the exe? *Format: C:\\path\\to\\malz.exe”*. In this scenario, I mainly focused on what screenconnect is summoning since we discovered that is what the attacker has been using so far in order to continue their compromise. I want to see if the screenconnect is going to summon a .exe process that is a legitimate service in Windows. After doing some research on "how to know when screenconnect is downloading a binary file", I came across an article by ForcePoint. This article in particular has a screenshot of ScreenConnect's files, and there was one that stood out to me-- "ScreenConnect.WindowsFileManager.exe" ([ScreenConnect Under Attack: SmartScreen Evasion and RMM Abuse, Sewani](https://www.forcepoint.com/blog/x-labs/screenconnect-attack)).
 
@@ -301,11 +301,11 @@ I then went and did further research, and came across ["Suspicious ScreenConnect
 
 My suspicion was confirmed and I went to look for "ScreenConnect.WindowsFileManager" in Sysmon and found that a Python dll is a target file, and the image is from ScreenConnect.WindowsFileManager.
 
-![Figure 38: python312.dll being a target file by a ScreenConnect image, and is all being ran under NT AUTHORITYSYSTEM at 3/4/2024 12:59:12.297 PM, within the time of compromise.](./assets/image17.png)
+![Figure 38: python312.dll being a target file by a ScreenConnect image, and is all being ran under NT AUTHORITYSYSTEM at 3/4/2024 12\:59\:12.297 PM, within the time of compromise.](./assets/image17.png)
 
-*Figure 38: python312.dll being a target file by a ScreenConnect image, and is all being ran under NT AUTHORITY\\SYSTEM at 3/4/2024 12:59:12.297 PM, within the time of compromise.*
+*Figure 38: python312.dll being a target file by a ScreenConnect image, and is all being ran under NT AUTHORITY\\SYSTEM at 3/4/2024 12\:59\:12.297 PM, within the time of compromise.*
 
-I continued to see if there are any other Python files that are being accessed by ScreenConnect. I couldn't find it using Event ID 11, so I pivoted to Event ID 1 and went to look for "python.exe" . I found it, around 3/4/2024 at 1:00:27 where “python.exe” was also targeted by ScreenConnect.
+I continued to see if there are any other Python files that are being accessed by ScreenConnect. I couldn't find it using Event ID 11, so I pivoted to Event ID 1 and went to look for "python.exe" . I found it, around 3/4/2024 at 1\:00\:27 where “python.exe” was also targeted by ScreenConnect.
 
 ![Figure 39: python.exe being targeted.](./assets/image66.png)
 
@@ -349,13 +349,13 @@ Question 5, “Based on the same process dump, can you identify the domain the b
 
 ## Phase 6: Accessing Volume Shadow Copies
 
-Question 1 of this section asks, “What was the timestamp of the command that the threat actor used to access a volume shadow copy of the beachhead host? *Format: YYYY-MM-DD HH:MM:SS”*. I looked up how to access a volume shadow copy, in which I discovered a forum/thread of [“Accessing Volume Shadow Copy (VSS) Snapshots from powershell” asked by jordanm in Stack Overflow](https://stackoverflow.com/questions/14207788/accessing-volume-shadow-copy-vss-snapshots-from-powershell). Steve B responded with `"vssadmin delete shadows /Shadow=""$($s2.ID.ToLower())"" /Quiet" | iex` then `Remove-Item c:\shadowcopy -Confirm:$false -Force`. I was looking on how to access the volume shadow copy in general– and “vssadmin” was the command to access it in general. I will explain in Phase 8 on what exactly a volume shadow copy is– and how an attacker may abuse this feature.
+Question 1 of this section asks, “What was the timestamp of the command that the threat actor used to access a volume shadow copy of the beachhead host? *Format: YYYY-MM-DD HH\:MM\:SS”*. I looked up how to access a volume shadow copy, in which I discovered a forum/thread of [“Accessing Volume Shadow Copy (VSS) Snapshots from powershell” asked by jordanm in Stack Overflow](https://stackoverflow.com/questions/14207788/accessing-volume-shadow-copy-vss-snapshots-from-powershell). Steve B responded with `"vssadmin delete shadows /Shadow=""$($s2.ID.ToLower())"" /Quiet" | iex` then `Remove-Item c:\shadowcopy -Confirm:$false -Force`. I was looking on how to access the volume shadow copy in general– and “vssadmin” was the command to access it in general. I will explain in Phase 8 on what exactly a volume shadow copy is– and how an attacker may abuse this feature.
 
-I then looked through Event ID 1 in Sysmon (CC-JMP-01) and ensure that the time is between 3/3/2024 - 3/7/2024. I then typed “vssadmin” under "Find", in which I found that the answer is 2024-03-05 21:23:17, and is the very first time “vssadmin” was used. Another interesting one is that the second time “vssadmin” was used is actually on 3/7/2024 at 3:33:37 AM, which is a quiet deletion of
+I then looked through Event ID 1 in Sysmon (CC-JMP-01) and ensure that the time is between 3/3/2024 - 3/7/2024. I then typed “vssadmin” under "Find", in which I found that the answer is 2024-03-05 21\:23\:17, and is the very first time “vssadmin” was used. Another interesting one is that the second time “vssadmin” was used is actually on 3/7/2024 at 3\:33\:37 AM, which is a quiet deletion of
 
-![Figure 45: vssadmin shadow copy being accessed on 3/5/2024 at 9:23:17 PM– reformatted accordingly.](./assets/image22.png)
+![Figure 45: vssadmin shadow copy being accessed on 3/5/2024 at 9\:23\:17 PM– reformatted accordingly.](./assets/image22.png)
 
-*Figure 45: vssadmin shadow copy being accessed on 3/5/2025 at 9:23:17 PM– reformatted accordingly.*
+*Figure 45: vssadmin shadow copy being accessed on 3/5/2025 at 9\:23\:17 PM– reformatted accordingly.*
 
 Question 2 then asks, “What was the file name that was responsible for running the volume shadow copy command?”. In the parent field for the same event, the file name that is running the volume shadow copy command can be seen-- and the answer is “663bc8c1-f975-4a03-ad75-02145ad1b7c4run.cmd”.
 
@@ -399,7 +399,7 @@ Question 2 asks, “What discovery tool did the threat actor create through thei
 
 *Figure 51: SharpHound.exe was created.*
 
-Question 3, “Was the threat actor successful in executing this tool?”. I had to do some research to see what exactly SharpHound would produce if it was ran successfully. Apparently, according to ["Behavior:Win32/SharpHound.AM" by Microsoft ](https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Behavior:Win32/SharpHound.AM&ThreatID=2147943927)(no associated aliases), "Upon completion, the tool invokes a compression routine, typically using the .NET System.IO.Compression.ZipFile class, to bundle these files into a single archive. Common archive names follow patterns like BloodHound.bin, BloodHound.zip, or YYYYMMDDHHMMSS_SharpHound.zip". After finding out that SharpHound leaves files, I looked through event code 1, 11, and 4688 paired with “winlog.event_data.Image” related to SharpHound.exe, but there were none at all.
+Question 3, “Was the threat actor successful in executing this tool?”. I had to do some research to see what exactly SharpHound would produce if it was ran successfully. Apparently, according to ["Behavior\:Win32/SharpHound.AM" by Microsoft ](https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Behavior:Win32/SharpHound.AM&ThreatID=2147943927)(no associated aliases), "Upon completion, the tool invokes a compression routine, typically using the .NET System.IO.Compression.ZipFile class, to bundle these files into a single archive. Common archive names follow patterns like BloodHound.bin, BloodHound.zip, or YYYYMMDDHHMMSS_SharpHound.zip". After finding out that SharpHound leaves files, I looked through event code 1, 11, and 4688 paired with “winlog.event_data.Image” related to SharpHound.exe, but there were none at all.
 
 ![Figure 52: No match for event.code 11.](./assets/image34.png)
 
@@ -486,11 +486,11 @@ I was a bit confused and looked up "is PTASpy for Azure?" and found the EXACT bl
 
 *Figure 64: AzureADConnectAuthenticationAgentService.exe is where PTASpy.dll is injected.*
 
-Question 5, “What is the likely user that had their credentials recorded by the DLL. *Format: egirl@waifu.phd”*. I then pivoted to Azure and typed in “principal name” in the field names initially, and looked around until I came across “admin”. Then I looked at the “message” section, which mentioned the “userPrincipalName” as "ty@inversecos.onmicrosoft.com" AND it was roughly in the same timeframe. This was not the answer. I then scrolled through the documentation continuously and discovered a field titled “user.domain” and went to type that in and immediately went to “user.domain: waifu.phd” as it autocompleted, then I saw the first person's domain around similar timeframe (3/6/2024 at 02:57:06.003) that the attacker injected PTASpy.dll, “cpecht7@waifu.phd”, which was the answer.
+Question 5, “What is the likely user that had their credentials recorded by the DLL. *Format: egirl@waifu.phd”*. I then pivoted to Azure and typed in “principal name” in the field names initially, and looked around until I came across “admin”. Then I looked at the “message” section, which mentioned the “userPrincipalName” as "ty@inversecos.onmicrosoft.com" AND it was roughly in the same timeframe. This was not the answer. I then scrolled through the documentation continuously and discovered a field titled “user.domain” and went to type that in and immediately went to “user.domain: waifu.phd” as it autocompleted, then I saw the first person's domain around similar timeframe (3/6/2024 at 02\:57\:06.003) that the attacker injected PTASpy.dll, “cpecht7@waifu.phd”, which was the answer.
 
-![Figure 64: cpecht7@waifu.phd signing in on 3/6/2024 at 02:57:06.003, around similar time frame that the PTASpy.dll was injected.](./assets/image18.png)
+![Figure 64: cpecht7@waifu.phd signing in on 3/6/2024 at 02\:57\:06.003, around similar time frame that the PTASpy.dll was injected.](./assets/image18.png)
 
-*Figure 64: cpecht7@waifu.phd signing in on 3/6/2024 at 02:57:06.003, around similar time frame that the PTASpy.dll was injected.*
+*Figure 64: cpecht7@waifu.phd signing in on 3/6/2024 at 02\:57\:06.003, around similar time frame that the PTASpy.dll was injected.*
 
 ## Phase 9: Accessing the Good Stuff
 
@@ -510,7 +510,7 @@ I also saw that in the "Tools" section, there is an MFTECmd by Eric Zimmerman th
 
 *Figure 66: In the FileSystem folder, these are all the files that are parsed by MFTECmd.*
 
-I immediately went to \$MFT since the question asked for exactly that. Looking through “CC-Admin\\Documents” actually didn't yield me the correct results at all, except for a lead-- which was “database.bak.rpt.kh1ftzx” within “CC-Admin\\Documents” on 3/7/2024 at 03:09:24, around the time of the compromise still ongoing.
+I immediately went to \$MFT since the question asked for exactly that. Looking through “CC-Admin\\Documents” actually didn't yield me the correct results at all, except for a lead-- which was “database.bak.rpt.kh1ftzx” within “CC-Admin\\Documents” on 3/7/2024 at 03\:09\:24, around the time of the compromise still ongoing.
 
 ![Figure 67: database.bak.rpt .kh1ftzx under CC-AdminDocuments.](./assets/image2.png)
 
@@ -528,7 +528,7 @@ I was extremely lost still, despite this lead. I went and looked up what the res
 
 ## Phase 10: Release the Ransomware UwU
 
-Question 1 asks, “What was the name of the ransomware binary? *Format: waifu.exe”*. In here, I went after the timeline that was last left by the last question, which was the “database.bak.rpt.kh1ftzx”. It was actually last modified on 3/7/2024 at 03:39:33. Basing it off the timing of everything, I concluded that it should be around that time where the attacker set up everything. I went back to Elastic, specifically for Windows Event Logs, and searched \*.exe\* that is extremely narrowed down by timeframe, which is 3/7/2024 at 03:30:00 and 3/7/2024 at 04:00:00. This yields 2,008 documents. I made sure that I had it sorted in Old-New. However, I went to the “Field Statistics” like I usually do-- and checked the fields that I knew would contain a command line (e.g. “winlog.event_data.ScriptBlockText”) and/or file processes (e.g. “winlog.event_data.ProcessName”) and see if I can find anything suspicious quicker there. I found a “winlog.event_data.ScriptBlockText” field and saw a distinct value of 1. I opened up the file and it was “\\\\192.168.0.13\\SuperSecretSecureShare\\print64.exe --access-token uwuwuwuwuwuwuw”. The answer binary's name is there, which is “print64.exe”.
+Question 1 asks, “What was the name of the ransomware binary? *Format: waifu.exe”*. In here, I went after the timeline that was last left by the last question, which was the “database.bak.rpt.kh1ftzx”. It was actually last modified on 3/7/2024 at 03\:39\:33. Basing it off the timing of everything, I concluded that it should be around that time where the attacker set up everything. I went back to Elastic, specifically for Windows Event Logs, and searched \*.exe\* that is extremely narrowed down by timeframe, which is 3/7/2024 at 03\:30\:00 and 3/7/2024 at 04\:00\:00. This yields 2,008 documents. I made sure that I had it sorted in Old-New. However, I went to the “Field Statistics” like I usually do-- and checked the fields that I knew would contain a command line (e.g. “winlog.event_data.ScriptBlockText”) and/or file processes (e.g. “winlog.event_data.ProcessName”) and see if I can find anything suspicious quicker there. I found a “winlog.event_data.ScriptBlockText” field and saw a distinct value of 1. I opened up the file and it was “\\\\192.168.0.13\\SuperSecretSecureShare\\print64.exe --access-token uwuwuwuwuwuwuw”. The answer binary's name is there, which is “print64.exe”.
 
 ![Figure 70: print64.exe being the name of the binary.](./assets/image45.png)
 
@@ -548,39 +548,39 @@ This took quite a while to be finished. I had zero experience in IR– I learned
 
 March 3, 2024 - Initial Access & Persistence
 
-- **~11:00 AM** : Password spraying begins from AWS IPs, targeting 8 user accounts.
-- **~12:59 PM** : MFA push fatigue attack starts against ivanderplas1.
-- **1:03 PM** : Successful login as ivanderplas1@waifu.phd from 207.246.70.192
-- **1:37 PM** : Attacker logs into CC-JMP-01, workstation name: 283d12e66790.
-- **5:09 PM** : Downloads SharpCollection from GitHub via PowerShell.
-- **5:46 PM** : Enumerates services with sc.exe and wmic.exe.
-- **6:13 PM** : Drops waifu.exe in C:\\ProgramData.
-- **6:21 PM** : Exploits unquoted service path then gain SYSTEM privileges.
-- **6:21 PM** : Installs ScreenConnect, connects to C2 relay.
+- **~11\:00 AM** : Password spraying begins from AWS IPs, targeting 8 user accounts.
+- **~12\:59 PM** : MFA push fatigue attack starts against ivanderplas1.
+- **1\:03 PM** : Successful login as ivanderplas1@waifu.phd from 207.246.70.192
+- **1\:37 PM** : Attacker logs into CC-JMP-01, workstation name: 283d12e66790.
+- **5\:09 PM** : Downloads SharpCollection from GitHub via PowerShell.
+- **5\:46 PM** : Enumerates services with sc.exe and wmic.exe.
+- **6\:13 PM** : Drops waifu.exe in C:\\ProgramData.
+- **6\:21 PM** : Exploits unquoted service path then gain SYSTEM privileges.
+- **6\:21 PM** : Installs ScreenConnect, connects to C2 relay.
 
 March 4, 2024 - Weaponization
 
-- **12:59 PM** : ScreenConnect targets python312.dll.
-- **1:00 PM** : python.exe compromised through ScreenConnect.
+- **12\:59 PM** : ScreenConnect targets python312.dll.
+- **1\:00 PM** : python.exe compromised through ScreenConnect.
 
 March 5, 2024 - C2 Beacon & Credential Dumping
 
-- **11:01 AM** : python.exe hash changes, confirming compromise (Cobalt Strike beacon)
-- **9:23 PM** : Runs “vssadmin create shadow /for=C:” on CC-JMP-01 for credentials.
+- **11\:01 AM** : python.exe hash changes, confirming compromise (Cobalt Strike beacon)
+- **9\:23 PM** : Runs “vssadmin create shadow /for=C:” on CC-JMP-01 for credentials.
 
 March 6, 2024 - Domain Compromise & Lateral Movement
 
-- **2:05 AM** : Enumerates Administrators group on CC-JMP-01.
-- **2:13 AM** : Installs a malicious service (8628f7b) on CC-DC-01 (domain controller) from Parrot OS.
-- **2:18 AM** : SharpHound is dropped via python.exe (execution fails).
-- **2:53 AM** : Injects PTASpy.dll into AzureADConnectAuthenticationAgentService.exe on CC-DC-01.
-- **2:57 AM** : First credential captured: cpecht7@waifu.phd.
-- **2:59 AM** : RDPs to CC-SQL-01 as CC-Admin.
+- **2\:05 AM** : Enumerates Administrators group on CC-JMP-01.
+- **2\:13 AM** : Installs a malicious service (8628f7b) on CC-DC-01 (domain controller) from Parrot OS.
+- **2\:18 AM** : SharpHound is dropped via python.exe (execution fails).
+- **2\:53 AM** : Injects PTASpy.dll into AzureADConnectAuthenticationAgentService.exe on CC-DC-01.
+- **2\:57 AM** : First credential captured: cpecht7@waifu.phd.
+- **2\:59 AM** : RDPs to CC-SQL-01 as CC-Admin.
 
 March 7, 2024 - Ransomware
 
-- **3:09 AM** : database.bak.rpt created in CC-Admin\\Documents on SQL server.
-- **3:35 AM** : Ransomware executed: “\\\\192.168.0.13\\SuperSecretSecureShare\\print64.exe --access-token uwuwuwuwuwuwuw”.
+- **3\:09 AM** : database.bak.rpt created in CC-Admin\\Documents on SQL server.
+- **3\:35 AM** : Ransomware executed: “\\\\192.168.0.13\\SuperSecretSecureShare\\print64.exe --access-token uwuwuwuwuwuwuw”.
 - **Aftermath** : Files encrypted with .kh1ftzx extension, ransom note dropped, and investigation (us :D!)
 
 ## References
